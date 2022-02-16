@@ -13,6 +13,8 @@ from statistics import mean
 
 import lightgbm as lgb
 
+import pickle
+
 '''初期設定'''
 
 # モデル名
@@ -22,6 +24,7 @@ PROCESSED_TRAIN_DATA_PATH = '../data/processed/preprocessed_train.csv'
 PROCESSED_TEST_DATA_PATH = '../data/processed/preprocessed_test.csv'
 SAMPLESUB_PATH = './data/input/sample_submit.csv'
 SUB_PATH = f'../submit/{model_name}'
+SAVE_MODEL_PATH = f'../models/{model_name}'
 
 # データの読み込み
 train = pd.read_csv(PROCESSED_TRAIN_DATA_PATH)
@@ -81,6 +84,10 @@ for train_index, val_index in skf.split(X_train, Y_train):
     # heatmapによる混同行列の可視化
     sns.heatmap(cm, annot=True, cmap='Blues')
     plt.show()
+    
+    # モデルの保存
+    file = SAVE_MODEL_PATH + f'_{acc:.4f}.pkl'
+    pickle.dump(model, open(file, 'wb'))
     
     
 # 平均AUCを計算する
